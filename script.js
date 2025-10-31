@@ -26,7 +26,8 @@ function addCollaborator() {
  * - Injecter le HTML dans l'élément avec innerHTML
  */
 function updateCollaboratorsList() {
-    // À IMPLÉMENTER
+ const assigne =document.getElementById("storyAssignee")
+ assigne.innerHTML+= `<option >${collaborators[collaborators.length-1]}</option>`;
 }
 
 /**
