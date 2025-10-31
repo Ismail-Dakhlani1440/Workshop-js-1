@@ -32,8 +32,10 @@ function addCollaborator() {
  * - Injecter le HTML dans l'élément avec innerHTML
  */
 function updateCollaboratorsList() {
-
+let collabList= document.getElementById("collaboratorsList");
+collabList.innerHTML+=`<span class="nameContainer">${collaborators[collaborators.length-1]}</span>`;
 }
+
 
 /**
  * Fonction pour mettre à jour la liste déroulante des assignés
