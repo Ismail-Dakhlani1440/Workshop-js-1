@@ -15,11 +15,12 @@ let storyIdCounter = 1;
  */
 function addCollaborator() {
     // À IMPLÉMENTER
-     const input = document.getElementById("collaboratorName");
-     if (collaborators.includes(input.value) || input.value === "") return;
-     collaborators.push(input.value)
-   updateCollaboratorsList()
-   updateAssigneeSelect()
+    const input = document.getElementById("collaboratorName");
+    if (collaborators.includes(input.value) || input.value === "") return;
+    collaborators.push(input.value);
+    updateCollaboratorsList();
+    updateAssigneeSelect();
+    input.value = "";
 }
 
 
@@ -43,8 +44,8 @@ function updateCollaboratorsList() {
  * - Mettre à jour le select avec innerHTML
  */
 function updateAssigneeSelect() {
-    const assigne =document.getElementById("storyAssignee")
- assigne.innerHTML+= `<option >${collaborators[collaborators.length-1]}</option>`;
+    const assigne = document.getElementById("storyAssignee")
+    assigne.innerHTML += `<option >${collaborators[collaborators.length - 1]}</option>`;
 }
 
 /**
@@ -59,6 +60,39 @@ function updateAssigneeSelect() {
  */
 function addUserStory() {
     // À IMPLÉMENTER
+    let storyAssignee = document.getElementById("storyAssignee")
+    let storySprint = document.getElementById("storySprint")
+    let storyTittle = document.getElementById("storyTitle")
+    let storySprintSelected = '';
+    let storyAssigneeSelected = '';
+    storySprint.querySelectorAll('option').forEach(option => {
+        if (option.selected) {
+            storySprintSelected = parseInt(option.value)
+        }
+    })
+    storyAssignee.querySelectorAll('option').forEach(option => {
+        if (option.selected) {
+            storyAssigneeSelected = option.innerText
+        }
+    })
+    let storyDescription = document.getElementById("storyDescription")
+
+    let story = {
+        id: storyIdCounter,
+        title: storyTittle.value,
+        description: storyDescription.value,
+        sprint: storySprintSelected,
+        assignee: storyAssigneeSelected,
+        status: 'backlog'
+    }
+    if (storyTittle == " " || storyDescription == " ") return;
+    console.log(typeof (storySprintSelected))
+    userStories.push(story)
+    renderSprintBacklog()
+    storyTittle.value = ""
+    storyDescription.value = ""
+    storyIdCounter++
+
 }
 
 /**
