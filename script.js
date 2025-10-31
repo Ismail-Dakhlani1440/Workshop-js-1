@@ -15,7 +15,13 @@ let storyIdCounter = 1;
  */
 function addCollaborator() {
     // À IMPLÉMENTER
+     const input = document.getElementById("collaboratorName");
+     if (collaborators.includes(input.value) || input.value === "") return;
+     collaborators.push(input.value)
+   updateCollaboratorsList()
+   updateAssigneeSelect()
 }
+
 
 /**
  * Fonction pour afficher la liste des collaborateurs dans l'interface
