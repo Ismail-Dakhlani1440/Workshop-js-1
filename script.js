@@ -16,7 +16,7 @@ let storyIdCounter = 1;
 function addCollaborator() {
     // À IMPLÉMENTER
     const input = document.getElementById("collaboratorName");
-    if (collaborators.includes(input.value) || input.value === "") return;
+    if (collaborators.includes(input.value) || !input.value) return;
     collaborators.push(input.value);
     updateCollaboratorsList();
     updateAssigneeSelect();
@@ -87,8 +87,7 @@ function addUserStory() {
         assignee: storyAssigneeSelected,
         status: 'backlog'
     }
-    if (storyTittle == " " || storyDescription == " ") return;
-    console.log(typeof (storySprintSelected))
+    if (!storyTittle.value || !storyDescription.value) return;
     userStories.push(story)
     renderSprintBacklog()
     storyTittle.value = ""
@@ -96,6 +95,7 @@ function addUserStory() {
     storyIdCounter++
 
 }
+
 
 /**
  * Fonction pour afficher le Sprint Backlog avec toutes les stories par sprint
@@ -109,7 +109,31 @@ function addUserStory() {
  * - Injecter tout le HTML généré dans le conteneur
  */
 function renderSprintBacklog() {
-    // À IMPLÉMENTER
+    const backlog=document.getElementById("sprintBacklog");
+    let template = "";
+for (let i= 1; i<4; i++){
+    template+=`
+            <div class="sprint-container">
+                <div class="sprint-header">
+                    <h3>Sprint ${i}</h3>
+                    <button class="start-sprint-btn" onclick="startSprint(${i})">
+                        ▶ Démarrer Sprint
+                    </button>
+                </div>
+                <div class="sprint-stories">`;
+    userStories.forEach(Element => {
+    if(Element.status==='backlog' && Element.sprint===i){
+    template+=`
+        <div class="story-item">
+            <strong>${Element.title}</strong>
+            <p>${Element.description}</p>
+            <small>Assigné à: ${Element.assignee}</small>
+        </div>`
+        }
+})
+template+=`</div> </div>`
+}
+backlog.innerHTML= template
 }
 
 /**
@@ -123,7 +147,15 @@ function renderSprintBacklog() {
  * - Appeler renderSprintBacklog() et renderBoard() pour mettre à jour l'affichage
  */
 function startSprint(sprintNum) {
-    // À IMPLÉMENTER
+    userStories.forEach((story,index) => {
+        if(story.status ==='backlog' && story.sprint=== sprintNum ){
+            story.status = 'todo' 
+            boardStories.push(story)
+            userStories.splice(index,1)  
+        }
+    renderSprintBacklog()
+    renderBoard()
+})
 }
 
 /**
@@ -139,7 +171,36 @@ function startSprint(sprintNum) {
  *   - Injecter le HTML dans le conteneur
  */
 function renderBoard() {
-    // À IMPLÉMENTER
+    const statuses=['todo', 'in-progress', 'testing', 'done']
+    statuses.forEach((status,index) => {
+        let cardholder = document.querySelector(`.${status}`)
+        let card = cardholder.children[1]
+        console.log(card)
+        boardStories.forEach(story => {
+            if(story.status === status){
+                let template="";
+                template+=`
+                <div class="card">
+                    <h4>${story.title}</h4>
+                    <p>${story.description}</p>
+                    <span class="assignee">${story.assignee}</span>
+                    <div class="card-actions">`
+                if(story.status !== 'done'){
+                    template+=
+                            `<button class="move-btn" onclick="moveCard(${story.id}, ${statuses[index+1]})">Suivant →</button>`
+                }
+                if(story.status !== 'todo'){
+                template+= 
+                        `<button class="move-btn" onclick="moveCard(${story.id}, ${statuses[index-1]})">← Précédent</button>`
+                }
+                template+=
+                        `<button class="delete-btn" onclick="deleteCard(${story.id})">Supprimer</button>
+                    </div>
+                </div>`
+            card.innerHTML=template;
+            }
+        })
+    })
 }
 
 /**
@@ -170,7 +231,7 @@ function getPrevStatus(current) {
  * - Appeler renderBoard() pour actualiser l'affichage
  */
 function moveCard(id, newStatus) {
-    // À IMPLÉMENTER
+    
 }
 
 /**
