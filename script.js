@@ -14,7 +14,6 @@ let storyIdCounter = 1;
  * - Appeler updateAssigneeSelect() pour mettre à jour le select d'assignation
  */
 function addCollaborator() {
-    // À IMPLÉMENTER
     const input = document.getElementById("collaboratorName");
     if (collaborators.includes(input.value) || !input.value) return;
     collaborators.push(input.value);
@@ -60,8 +59,7 @@ function updateAssigneeSelect() {
  * - Vider les champs titre et description
  * - Appeler renderSprintBacklog() pour actualiser l'affichage
  */
-function addUserStory() {
-    // À IMPLÉMENTER
+function addUserStory() {   
     let storyAssignee = document.getElementById("storyAssignee")
     let storySprint = document.getElementById("storySprint")
     let storyTittle = document.getElementById("storyTitle")
@@ -173,9 +171,8 @@ function startSprint(sprintNum) {
 function renderBoard() {
     const statuses=['todo', 'in-progress', 'testing', 'done']
     statuses.forEach((status,index) => {
-        let cardholder = document.querySelector(`.${status}`)
-        let card = cardholder.children[1]
-        console.log(card)
+        let card = document.querySelector(`.${status}`).children[1]      
+       card.innerHTML=""
         boardStories.forEach(story => {
             if(story.status === status){
                 let template="";
@@ -187,16 +184,18 @@ function renderBoard() {
                     <div class="card-actions">`
                 if(story.status !== 'done'){
                     template+=
-                            `<button class="move-btn" onclick="moveCard(${story.id}, ${statuses[index+1]})">Suivant →</button>`
+                            `<button class="move-btn" onclick="moveCard(${story.id}, '${statuses[index+1]}')">Suivant →</button>`
+                            
                 }
                 if(story.status !== 'todo'){
                 template+= 
-                        `<button class="move-btn" onclick="moveCard(${story.id}, ${statuses[index-1]})">← Précédent</button>`
+                        `<button class="move-btn" onclick="moveCard(${story.id}, '${statuses[index-1]}')">← Précédent</button>`
                 }
                 template+=
                         `<button class="delete-btn" onclick="deleteCard(${story.id})">Supprimer</button>
                     </div>
                 </div>`
+                console.log(template)
             card.innerHTML=template;
             }
         })
@@ -210,7 +209,13 @@ function renderBoard() {
  * - Retourner le status suivant selon le status actuel
  */
 function getNextStatus(current) {
-    // À IMPLÉMENTER
+  
+//    const trans=['todo', 'in-progress', 'testing', 'done']
+//    trans.forEach((trans,index) =>{
+//     if(current=trans,index){
+//         current=trans,index+1
+//     }
+//    })
 }
 
 /**
@@ -220,7 +225,15 @@ function getNextStatus(current) {
  * - Retourner le status précédent selon le status actuel
  */
 function getPrevStatus(current) {
-    // À IMPLÉMENTER
+    
+//    const trans=['todo', 'in-progress', 'testing', 'done']
+//    trans.forEach((trans,index) =>{
+//    if(current=trans,index){
+//         current=trans,index-1
+
+//     }
+//    })
+
 }
 
 /**
@@ -231,7 +244,14 @@ function getPrevStatus(current) {
  * - Appeler renderBoard() pour actualiser l'affichage
  */
 function moveCard(id, newStatus) {
-    
+    boardStories.forEach(story=>{       
+        if(story.id===id){
+            story.status=newStatus
+        }
+    })
+    renderBoard();
+
+
 }
 
 /**
@@ -241,7 +261,12 @@ function moveCard(id, newStatus) {
  * - Appeler renderBoard() pour actualiser l'affichage
  */
 function deleteCard(id) {
-    // À IMPLÉMENTER
+    boardStories.forEach((story,index)=>{       
+        if(story.id===id){
+            boardStories.splice(index,1)
+        }
+    })
+    renderBoard();
 }
 
 // Initialisation
