@@ -144,16 +144,25 @@ backlog.innerHTML= template
  * - Retirer ces stories du tableau 'userStories'
  * - Appeler renderSprintBacklog() et renderBoard() pour mettre à jour l'affichage
  */
+
+
 function startSprint(sprintNum) {
+    temp=[]
     userStories.forEach((story,index) => {
+        console.log(story,index)
         if(story.status ==='backlog' && story.sprint=== sprintNum ){
+            temp.push(story)
             story.status = 'todo' 
             boardStories.push(story)
-            userStories.splice(index,1)  
-        }
+        }})
+    temp.forEach( element =>{
+        userStories.forEach((story,index) => {
+            if(element.id===story.id){
+                userStories.splice(index,1)
+        }})
+    })
     renderSprintBacklog()
     renderBoard()
-})
 }
 
 /**
@@ -171,34 +180,32 @@ function startSprint(sprintNum) {
 function renderBoard() {
     const statuses=['todo', 'in-progress', 'testing', 'done']
     statuses.forEach((status,index) => {
-        let card = document.querySelector(`.${status}`).children[1]      
-       card.innerHTML=""
+        let card = document.querySelector(`.${status}`).children[1]
+        card.innerHTML=""
+        let template="";
         boardStories.forEach(story => {
             if(story.status === status){
-                let template="";
                 template+=`
                 <div class="card">
                     <h4>${story.title}</h4>
                     <p>${story.description}</p>
                     <span class="assignee">${story.assignee}</span>
                     <div class="card-actions">`
+                if(story.status !== 'todo'){
+                    template+= 
+                            `<button class="move-btn" onclick="moveCard(${story.id}, '${statuses[index-1]}')">← Précédent</button>`
+                }
                 if(story.status !== 'done'){
                     template+=
-                            `<button class="move-btn" onclick="moveCard(${story.id}, '${statuses[index+1]}')">Suivant →</button>`
-                            
-                }
-                if(story.status !== 'todo'){
-                template+= 
-                        `<button class="move-btn" onclick="moveCard(${story.id}, '${statuses[index-1]}')">← Précédent</button>`
+                            `<button class="move-btn" onclick="moveCard(${story.id}, '${statuses[index+1]}')">Suivant →</button>` 
                 }
                 template+=
                         `<button class="delete-btn" onclick="deleteCard(${story.id})">Supprimer</button>
                     </div>
                 </div>`
-                console.log(template)
-            card.innerHTML=template;
             }
         })
+    card.innerHTML=template;
     })
 }
 
